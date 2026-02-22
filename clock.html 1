@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Harun Live Clock</title>
+<style>
+body { background: black; color: #00ff00; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: monospace; }
+#clock { font-size: 80px; border: 3px solid #00ff00; padding: 20px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div id="clock">00:00:00</div>
+
+<script>
+function update() {
+var d = new Date();
+var h = d.getHours().toString().padStart(2, '0');
+var m = d.getMinutes().toString().padStart(2, '0');
+var s = d.getSeconds().toString().padStart(2, '0');
+document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
+}
+setInterval(update, 1000);
+update();
+</script>
+
+</body>
+</html>
