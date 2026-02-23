@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Harun's Task Manager</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; padding-top: 50px; }
+        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; color: #333; }
+        .input-group { display: flex; margin-bottom: 20px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px 0 0 5px; outline: none; }
+        button { padding: 10px; background: #28a745; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer; }
+        ul { list-style: none; padding: 0; }
+        li { background: #eee; margin-bottom: 5px; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; }
+        .delete-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Task List</h2>
+    <div class="input-group">
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button onclick="addTask()">Add</button>
+    </div>
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+    function addTask() {
+        let input = document.getElementById("taskInput");
+        let ul = document.getElementById("taskList");
+        
+        if (input.value.trim() !== "") {
+            let li = document.createElement("li");
+            li.innerHTML = `${input.value} <button class="delete-btn" onclick="this.parentElement.remove()">X</button>`;
+            ul.appendChild(li);
+            input.value = ""; // Clear input box
+        } else {
+            alert("Please enter a task!");
+        }
+    }
+</script>
+
+</body>
+</html>
