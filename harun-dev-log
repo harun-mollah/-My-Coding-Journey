@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Coding Journey | Day 7</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            line-height: 1.6; 
+            background-color: #f4f4f4; 
+            padding: 40px; 
+            display: flex;
+            justify-content: center;
+        }
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: #2c3e50; }
+        h3 { color: #34495e; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        
+        /* Link ko button jaisa dikhane ke liye styling */
+        .goal-button { 
+            display: block;
+            background-color: #e74c3c; 
+            color: white !important; 
+            padding: 15px; 
+            border-radius: 8px; 
+            text-align: center;
+            font-weight: bold; 
+            text-decoration: none;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+        /* Mouse le jane par color change hoga */
+        .goal-button:hover { 
+            background-color: #c0392b; 
+        }
+
+        .resource-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Day 7: Progress Report</h1>
+        <p>One week completed! I am now moving towards advanced HTML elements.</p>
+        
+        <h3>What I've Learned</h3>
+        <ul>
+            <li>HTML Tags & Structure</li>
+            <li>Lists (ul, li)</li>
+            <li>Basic CSS Layouts</li>
+        </ul>
+
+        <a href="https://www.w3schools.com/html/html_forms.asp" target="_blank" class="goal-button">
+           Next Goal: Learning Forms & Buttons! 🚀
+        </a>
+        
+        <a href="https://www.google.com" target="_blank" class="resource-link">Search more on Google</a>
+    </div>
+
+</body>
+</html>
