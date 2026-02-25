@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harun Al Roshid | Link Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --primary: #2575fc;
+            --border: #eeeeee;
+        }
+
+        .dark-mode {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #ffffff;
+            --border: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            transition: 0.4s;
+        }
+
+        .container { width: 100%; max-width: 400px; text-align: center; }
+
+        .theme-toggle {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            object-fit: cover;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 { font-size: 24px; margin: 10px 0 5px; }
+        .bio { font-size: 15px; opacity: 0.8; margin-bottom: 25px; }
+
+        .links-container { display: flex; flex-direction: column; gap: 12px; }
+
+        .link-card {
+            text-decoration: none;
+            background: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px; /* Logo aur text ke beech gap */
+        }
+
+        /* Icons ka color thoda special rakhte hain */
+        .fa-github { color: #333; }
+        .fa-linkedin { color: #0077b5; }
+        .fa-instagram { color: #e4405f; }
+
+        .dark-mode .fa-github { color: #fff; }
+
+        .link-card:hover {
+            transform: scale(1.03);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(37, 117, 252, 0.15);
+        }
+
+        .contact-form {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 25px;
+            text-align: left;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #success {
+            display: none;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Mode</button>
+
+        <div class="card">
+            <img src="https://i.ibb.co/KptDg9W9/WhatsApp-Image-2026-02-03-at-6-06-07-PM.jpg" alt="Harun Al Roshid" class="profile-img">
+            
+            <h1>Harun Al Roshid</h1>
+            <p class="bio">Web Developer & Designer</p>
+
+            <div class="links-container">
+                <a href="https://github.com/harun-mollah" target="_blank" class="link-card">
+                    <i class="fa-brands fa-github"></i> GitHub Portfolio
+                </a>
+                <a href="https://www.linkedin.com/in/harun-al-roshid-mollah-465b5a394" target="_blank" class="link-card">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn Profile
+                </a>
+                <a href="https://www.instagram.com/script.harun" target="_blank" class="link-card">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                </a>
+            </div>
+
+            <div class="contact-form">
+                <h4 style="margin: 0 0 15px;">📩 Get in Touch</h4>
+                <form id="contactForm">
+                    <input type="text" placeholder="Name" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea rows="3" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn-send">Send Message</button>
+                </form>
+                <div id="success">✅ Sent! Thanks Harun.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.style.display = 'none';
+            document.getElementById('success').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
