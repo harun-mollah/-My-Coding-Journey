@@ -1,0 +1,47 @@
+<div style="margin-top: 30px; text-align: left; border-top: 2px solid #eee; padding-top: 25px;">
+    <h4 style="margin-bottom: 20px; color: #2c3e50; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <span>📩</span> Let's Connect
+    </h4>
+    
+    <form id="contactForm">
+        <div id="formInputs">
+            <div style="margin-bottom: 15px;">
+                <label for="name" style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; text-transform: uppercase;">Your Name</label>
+                <input type="text" id="name" placeholder="John Doe" required 
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; outline: none; font-size: 15px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="email" style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; text-transform: uppercase;">Email Address</label>
+                <input type="email" id="email" placeholder="hello@example.com" required 
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; outline: none; font-size: 15px;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="message" style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; text-transform: uppercase;">Your Message</label>
+                <textarea id="message" rows="4" placeholder="Write your thoughts here..." required 
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; outline: none; font-size: 15px; font-family: sans-serif;"></textarea>
+            </div>
+
+            <button type="submit" 
+                style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: transform 0.2s;">
+                Send Message 🚀
+            </button>
+        </div>
+    </form>
+
+    <div id="successMsg" style="display: none; text-align: center; padding: 30px; background: #f0fdf4; border-radius: 12px; border: 1px dashed #22c55e;">
+        <div style="font-size: 40px; margin-bottom: 10px;">✅</div>
+        <h3 style="color: #166534; margin: 0;">Message Sent!</h3>
+        <p style="color: #15803d; margin-top: 10px;">Thanks for reaching out.</p>
+        <button onclick="location.reload()" style="margin-top: 15px; background: white; border: 1px solid #22c55e; color: #22c55e; padding: 5px 15px; border-radius: 20px; cursor: pointer;">Send Another</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Browser refresh nahi hoga
+        document.getElementById('formInputs').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+    });
+</script>
