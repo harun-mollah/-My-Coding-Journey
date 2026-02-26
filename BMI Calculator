@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harun's Fitness Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: #1e1e2f;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .bmi-container {
+            background: #27293d;
+            padding: 30px;
+            border-radius: 25px;
+            width: 380px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h2 { margin-bottom: 25px; color: #00d2ff; letter-spacing: 1px; }
+
+        .input-box { margin-bottom: 20px; position: relative; }
+
+        label { display: block; text-align: left; margin-bottom: 8px; color: #a5a5a5; font-size: 14px; }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1e1e2f;
+            border: 1px solid #444;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); }
+
+        #result-card {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .score { font-size: 32px; font-weight: 800; margin-bottom: 5px; }
+        .status { font-size: 18px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="bmi-container">
+        <i class="fa-solid fa-heart-pulse" style="font-size: 40px; color: #e91e63; margin-bottom: 10px;"></i>
+        <h2>Fitness Tracker</h2>
+        
+        <div class="input-box">
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="Enter Weight">
+        </div>
+
+        <div class="input-box">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="Enter Height">
+        </div>
+
+        <button onclick="calculateBMI()">Analyze My Health</button>
+
+        <div id="result-card">
+            <div class="score" id="bmi-val">0</div>
+            <div class="status" id="bmi-status">Normal</div>
+        </div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            const card = document.getElementById('result-card');
+
+            if (!w || !h) {
+                alert("Please enter valid numbers! 😊");
+                return;
+            }
+
+            const bmi = (w / ((h/100) * (h/100))).toFixed(1);
+            document.getElementById('bmi-val').innerText = bmi;
+            card.style.display = "block";
+
+            let status = "";
+            let color = "";
+
+            if (bmi < 18.5) {
+                status = "Underweight 🥄";
+                color = "#3498db"; // Blue
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                status = "Perfectly Fit ✅";
+                color = "#2ecc71"; // Green
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                status = "Overweight 🍕";
+                color = "#f1c40f"; // Yellow
+            } else {
+                status = "Obese ⚠️";
+                color = "#e74c3c"; // Red
+            }
+
+            document.getElementById('bmi-status').innerText = status;
+            card.style.background = color;
+            card.style.color = (color === "#f1c40f") ? "#333" : "white"; // Yellow par black text
+        }
+    </script>
+</body>
+</html>
