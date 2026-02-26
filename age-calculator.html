@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Age Calculator | Harun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        h2 { margin-bottom: 25px; font-weight: 500; }
+
+        .input-box { margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #ffcc00;
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #e6b800; transform: scale(1.03); }
+
+        #result {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            display: none; /* Starting mein chhupa rahega */
+        }
+
+        .result-item { font-size: 18px; margin: 5px 0; }
+        .highlight { color: #ffcc00; font-weight: bold; font-size: 22px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <i class="fa-solid fa-calendar-check" style="font-size: 50px; margin-bottom: 15px;"></i>
+        <h2>Full Age Calculator</h2>
+        
+        <div class="input-box">
+            <input type="date" id="birthdate">
+        </div>
+        
+        <button onclick="calculateFullAge()">Calculate Now</button>
+        
+        <div id="result">
+            <div class="result-item">Aapki Umar Hai:</div>
+            <div id="age-detail"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateFullAge() {
+            const birthValue = document.getElementById('birthdate').value;
+            if (!birthValue) {
+                alert("Harun, date select karo! 😊");
+                return;
+            }
+
+            const dob = new Date(birthValue);
+            const today = new Date();
+
+            let y1 = dob.getFullYear();
+            let m1 = dob.getMonth() + 1;
+            let d1 = dob.getDate();
+
+            let y2 = today.getFullYear();
+            let m2 = today.getMonth() + 1;
+            let d2 = today.getDate();
+
+            let y3, m3, d3;
+
+            // Years Calculation
+            y3 = y2 - y1;
+
+            // Months Calculation
+            if (m2 >= m1) {
+                m3 = m2 - m1;
+            } else {
+                y3--;
+                m3 = 12 + m2 - m1;
+            }
+
+            // Days Calculation
+            if (d2 >= d1) {
+                d3 = d2 - d1;
+            } else {
+                m3--;
+                // Is mahine mein kitne din hain wo nikalne ke liye
+                let lastMonthDays = new Date(y2, m2 - 1, 0).getDate();
+                d3 = lastMonthDays + d2 - d1;
+                
+                // Adjustment agar month negative ho jaye
+                if (m3 < 0) {
+                    m3 = 11;
+                    y3--;
+                }
+            }
+
+            const resultBox = document.getElementById('result');
+            const detail = document.getElementById('age-detail');
+            
+            resultBox.style.display = "block";
+            detail.innerHTML = `
+                <span class="highlight">${y3}</span> Saal, 
+                <span class="highlight">${m3}</span> Mahine aur 
+                <span class="highlight">${d3}</span> Din
+            `;
+        }
+    </script>
+</body>
+</html>
