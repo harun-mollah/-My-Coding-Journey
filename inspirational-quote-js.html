@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiration Hub | Harun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .quote-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .fa-quote-left { font-size: 30px; color: #00d2ff; margin-bottom: 20px; }
+
+        #quote-text {
+            font-size: 22px;
+            font-weight: 400;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            min-height: 100px;
+        }
+
+        #quote-author {
+            font-size: 16px;
+            color: #00d2ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .btns {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            background: #00d2ff;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        button:hover {
+            background: #3a7bd5;
+            transform: scale(1.05);
+        }
+
+        .tweet-btn {
+            background: #1DA1F2;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .tweet-btn:hover { background: #0c85d0; }
+    </style>
+</head>
+<body>
+
+    <div class="quote-card">
+        <i class="fas fa-quote-left"></i>
+        <p id="quote-text">"Duniya ko badalne ke liye pehle apna code badlo."</p>
+        <span id="quote-author">- Harun Al Roshid</span>
+
+        <div class="btns">
+            <button onclick="newQuote()">New Quote</button>
+            <a href="#" id="tweet-quote" class="tweet-btn" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const quotes = [
+            { text: "Jab tak tum har nahi mante, tab tak tum jeet sakte ho.", author: "Jack Ma" },
+            { text: "Quality ka matlab hai kaam sahi karna, jab koi dekh na raha ho.", author: "Henry Ford" },
+            { text: "Duniya ki parwah mat karo, bas coding karte raho!", author: "Harun" },
+            { text: "Pehle seekho, phir seekhao, phir paisa kamao.", author: "Unknown" },
+            { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+            { text: "Success is not final, failure is not fatal.", author: "Winston Churchill" }
+        ];
+
+        function newQuote() {
+            // Math.random logic se ek random index chunna
+            const index = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[index];
+
+            // Screen par dikhana
+            document.getElementById('quote-text').innerText = `"${quote.text}"`;
+            document.getElementById('quote-author').innerText = `- ${quote.author}`;
+
+            // Twitter share link update karna
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${quote.text} - ${quote.author}`;
+            document.getElementById('tweet-quote').setAttribute('href', twitterUrl);
+        }
+
+        // Page load hote hi ek random quote dikhao
+        newQuote();
+    </script>
+</body>
+</html>
