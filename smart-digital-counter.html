@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Counter | Harun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: #e0e5ec;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .counter-container {
+            background: #e0e5ec;
+            padding: 50px;
+            border-radius: 50px;
+            box-shadow: 20px 20px 60px #bec3c9, -20px -20px 60px #ffffff;
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 { color: #444; font-weight: 500; margin-bottom: 30px; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
+
+        #count {
+            font-size: 80px;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .button-box {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: #e0e5ec;
+            box-shadow: 6px 6px 12px #bec3c9, -6px -6px 12px #ffffff;
+            cursor: pointer;
+            font-size: 20px;
+            color: #444;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:active {
+            box-shadow: inset 6px 6px 12px #bec3c9, inset -6px -6px 12px #ffffff;
+            transform: scale(0.95);
+        }
+
+        .reset-btn {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 25px;
+            height: 50px;
+        }
+
+        .plus:hover { color: #2ecc71; }
+        .minus:hover { color: #e74c3c; }
+        .reset-btn:hover { color: #3498db; }
+    </style>
+</head>
+<body>
+
+    <div class="counter-container">
+        <h2>Smart Counter</h2>
+        <div id="count">0</div>
+        
+        <div class="button-box">
+            <button class="minus" onclick="updateCount(-1)"><i class="fa-solid fa-minus"></i></button>
+            <button class="plus" onclick="updateCount(1)"><i class="fa-solid fa-plus"></i></button>
+        </div>
+
+        <button class="reset-btn" onclick="resetCount()">
+            <i class="fa-solid fa-rotate-right"></i> &nbsp; RESET
+        </button>
+    </div>
+
+    <script>
+        let counterValue = 0;
+        const display = document.getElementById('count');
+
+        function updateCount(val) {
+            counterValue += val;
+            display.innerText = counterValue;
+            
+            // Visual feedback
+            if(counterValue > 0) display.style.color = "#2ecc71";
+            else if(counterValue < 0) display.style.color = "#e74c3c";
+            else display.style.color = "#444";
+        }
+
+        function resetCount() {
+            counterValue = 0;
+            display.innerText = counterValue;
+            display.style.color = "#444";
+        }
+    </script>
+</body>
+</html>
