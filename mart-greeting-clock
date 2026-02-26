@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harun's Smart Clock | Day 10</title>
+    <style>
+        /* CSS Variables for Dynamic Colors */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-gradient);
+            transition: 1s ease; /* Background change smooth hoga */
+            color: white;
+        }
+
+        /* Glassmorphism Effect */
+        .clock-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); /* Isse glass jaisa effect aata hai */
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+        }
+
+        #greeting {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        #time {
+            font-size: 5rem;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        #date {
+            margin-top: 15px;
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body id="body-bg">
+
+    <div class="clock-card">
+        <div id="greeting">Loading...</div>
+        <h1 id="time">00:00:00</h1>
+        <div id="date">Loading Date...</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // Time Format (Adding leading zero)
+            const timeString = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            document.getElementById('time').textContent = timeString;
+
+            // Date Format
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+
+            // Logic for Greeting and Theme Change
+            let greeting = "";
+            let bgColor = "";
+
+            if (hours < 12) {
+                greeting = "Good Morning, Harun! ☀️";
+                bgColor = "linear-gradient(135deg, #FF914D, #FF6E7F)"; // Morning Orange
+            } else if (hours < 18) {
+                greeting = "Good Afternoon, Harun! ☕";
+                bgColor = "linear-gradient(135deg, #2980B9, #6DD5FA)"; // Afternoon Blue
+            } else {
+                greeting = "Good Evening, Harun! 🌙";
+                bgColor = "linear-gradient(135deg, #0F2027, #203A43, #2C5364)"; // Night Dark
+            }
+
+            document.getElementById('greeting').textContent = greeting;
+            document.body.style.background = bgColor;
+        }
+
+        // Clock ko har second update karein
+        setInterval(updateClock, 1000);
+
+        // Page load hote hi clock start karein
+        updateClock();
+    </script>
+</body>
+</html>
