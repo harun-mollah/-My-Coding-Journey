@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Harun Weather Final</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #0b0e14; height: 100vh; display: flex; justify-content: center; align-items: center; position: relative; }
+
+        .bg-name {
+            position: absolute;
+            font-size: 18vw;
+            font-weight: 900;
+            color: rgba(0, 210, 255, 0.1);
+            z-index: 1;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .weather-card {
+            background: #191e28;
+            padding: 35px;
+            border-radius: 30px;
+            width: 380px;
+            text-align: center;
+            border: 3px solid #00d2ff; /* Border ko thoda mota kiya taaki dikhe */
+            z-index: 10;
+        }
+
+        input { 
+            width: 100%;
+            padding: 15px; 
+            border-radius: 12px; 
+            border: none; 
+            background: #000; 
+            color: white; 
+            outline: none;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .temp { font-size: 80px; font-weight: 800; color: #fff; }
+        .city-text { font-size: 30px; color: #00d2ff; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+        .desc { color: #aaa; margin-bottom: 20px; font-style: italic; }
+
+        .details { display: flex; justify-content: space-around; border-top: 1px solid #333; padding-top: 20px; }
+        .col p { font-size: 18px; color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-name">HARUN</div>
+
+    <div class="weather-card">
+        <input type="text" id="userInput" oninput="findWeather()" placeholder="Type 'kolkata' or 'delhi'">
+
+        <div id="result-area">
+            <div class="temp"><span id="t-val">--</span>°C</div>
+            <div class="city-text" id="c-name">START TYPING</div>
+            <p class="desc" id="d-text">Waiting for your input...</p>
+
+            <div class="details">
+                <div class="col">
+                    <p id="h-val">--</p>
+                    <p style="font-size: 11px; color: #00d2ff;">Humidity</p>
+                </div>
+                <div class="col">
+                    <p id="w-val">--</p>
+                    <p style="font-size: 11px; color: #00d2ff;">Wind</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local Database
+        const myCities = {
+            "kolkata": { t: 34, h: "70%", w: "12 km/h", d: "Bahut Garmi hai!" },
+            "delhi": { t: 22, h: "40%", w: "8 km/h", d: "Sardi aur Dhund" },
+            "mumbai": { t: 30, h: "85%", w: "20 km/h", d: "Baarish wala Mausam" },
+            "london": { t: 10, h: "50%", w: "25 km/h", d: "Baraf gir rahi hai" }
+        };
+
+        function findWeather() {
+            let city = document.getElementById("userInput").value.toLowerCase().trim();
+            let data = myCities[city];
+
+            if (data) {
+                document.getElementById("t-val").innerText = data.t;
+                document.getElementById("c-name").innerText = city;
+                document.getElementById("h-val").innerText = data.h;
+                document.getElementById("w-val").innerText = data.w;
+                document.getElementById("d-text").innerText = data.d;
+            }
+        }
+    </script>
+</body>
+</html>
