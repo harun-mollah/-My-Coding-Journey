@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Harun's Movie Filter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; padding: 50px; }
+        
+        h1 { margin-bottom: 20px; color: #38bdf8; }
+        
+        #searchBox {
+            width: 350px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .movie-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 400px;
+        }
+
+        .movie-item {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #334155;
+            transition: 0.3s;
+        }
+
+        .movie-item:hover {
+            border-color: #38bdf8;
+            transform: translateY(-5px);
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>🎬 Movie Finder</h1>
+    <input type="text" id="searchBox" placeholder="Type movie name..." oninput="filterMovies()">
+
+    <div class="movie-list" id="movieList">
+        <div class="movie-item">Inception</div>
+        <div class="movie-item">Interstellar</div>
+        <div class="movie-item">Batman</div>
+        <div class="movie-item">Spiderman</div>
+        <div class="movie-item">Avengers</div>
+        <div class="movie-item">Pathaan</div>
+        <div class="movie-item">Jawan</div>
+        <div class="movie-item">Pushpa</div>
+    </div>
+
+    <script>
+        function filterMovies() {
+            let input = document.getElementById('searchBox').value.toLowerCase();
+            let movies = document.querySelectorAll('.movie-item');
+
+            movies.forEach(movie => {
+                let name = movie.innerText.toLowerCase();
+                
+                // Agar movie name mein search word hai, toh dikhao, nahi toh chhupao
+                if (name.includes(input)) {
+                    movie.classList.remove('hidden');
+                } else {
+                    movie.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
