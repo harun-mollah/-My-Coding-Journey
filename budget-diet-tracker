@@ -1,0 +1,60 @@
+"use client";
+import { useState } from 'react';
+import { hostelDiet } from '../data/meals';
+
+export default function Dashboard() {
+  const [tracker, setTracker] = useState([]);
+
+  const addMeal = (meal) => {
+    setTracker([...tracker, { ...meal, time: new Date().toLocaleTimeString() }]);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <header className="mb-10">
+        <h1 className="text-4xl font-bold text-blue-500">Hostel Gym Tracker 🏋️‍♂️</h1>
+        <p className="text-gray-400">Track your protein on a budget</p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* Diet Recommendations Section */}
+        <section className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+          <h2 className="text-2xl mb-4 font-semibold">Budget Diet Options</h2>
+          <div className="space-y-4">
+            {hostelDiet.map((item) => (
+              <div key={item.id} className="flex justify-between items-center p-4 bg-gray-700 rounded-lg">
+                <div>
+                  <p className="font-bold">{item.name}</p>
+                  <p className="text-sm text-green-400">Protein: {item.protein} | Cost: {item.cost}</p>
+                </div>
+                <button 
+                  onClick={() => addMeal(item)}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition"
+                >
+                  Add
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Daily Log Section */}
+        <section className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+          <h2 className="text-2xl mb-4 font-semibold">Today's Log</h2>
+          {tracker.length === 0 ? (
+            <p className="text-gray-500">No meals added yet. Start eating!</p>
+          ) : (
+            <ul className="space-y-2">
+              {tracker.map((entry, index) => (
+                <li key={index} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-700/50">
+                  <span className="text-gray-400 text-xs">{entry.time}</span>
+                  <p>{entry.name} - <span className="text-blue-300">{entry.protein}</span></p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
