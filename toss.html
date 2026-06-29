@@ -1,0 +1,156 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Cricket Simulator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1d976c, #93f9b9); /* Grass Green Gradient Theme */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: #ffffff;
+            padding: 35px 25px;
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); /* Soft Shadow */
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            border-top: 8px solid #11998e; /* Top highlight bar */
+        }
+        h2 { 
+            color: #11998e; 
+            margin-top: 0;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+        }
+        .input-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+            margin-left: 5%;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input {
+            width: 86%;
+            padding: 12px;
+            margin: 6px 0 15px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+            outline: none;
+        }
+        /* Input focus hone par glow effect */
+        input:focus {
+            border-color: #11998e;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(17, 153, 142, 0.2);
+        }
+        .range-container {
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+        }
+        .range-container input {
+            width: 40%;
+        }
+        button {
+            width: 92%;
+            padding: 14px;
+            background: linear-gradient(to right, #11998e, #38ef7d); /* Button Gradient */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.3);
+            transition: all 0.3s ease;
+        }
+        /* Button hover effect */
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .result-box {
+            margin-top: 25px;
+            background-color: #f4faf7;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e8f5e9;
+        }
+        #toss-result {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        #score-result {
+            color: #11998e; 
+            margin-top: 12px; 
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>🏏 Premium Cricket Simulator</h2>
+        
+        <div class="input-label">Total Match Overs</div>
+        <input type="number" id="custom-overs" placeholder="e.g. 1, 3, 5, 20" value="1">
+
+        <div class="input-label">Expected Run Range (Min / Max)</div>
+        <div class="range-container">
+            <input type="number" id="min-runs" placeholder="Min" value="20">
+            <input type="number" id="max-runs" placeholder="Max" value="35">
+        </div>
+
+        <button onclick="simulateMatch()">⚡ Start Match</button>
+
+        <div class="result-box">
+            <div id="toss-result">Click Start to Play!</div>
+            <div id="score-result">--/--</div>
+        </div>
+    </div>
+
+    <script>
+        function simulateMatch() {
+            const overs = document.getElementById('custom-overs').value;
+            const minRuns = parseInt(document.getElementById('min-runs').value);
+            const maxRuns = parseInt(document.getElementById('max-runs').value);
+
+            if (!overs || overs <= 0 || isNaN(minRuns) || isNaN(maxRuns) || minRuns > maxRuns) {
+                alert("⚠️ Please enter valid overs and correct run range!");
+                return;
+            }
+
+            const toss = Math.random() < 0.5 ? "Heads" : "Tails";
+            const decision = Math.random() < 0.5 ? "Batting" : "Bowling";
+            document.getElementById('toss-result').innerText = `🪙 Toss: Won (${toss}) & Chose to ${decision}!`;
+
+            const randomRuns = Math.floor(Math.random() * (maxRuns - minRuns + 1)) + minRuns;
+            const randomWickets = Math.floor(Math.random() * 4); 
+
+            document.getElementById('score-result').innerText = `🏏 ${randomRuns}/${randomWickets} (${overs} Ov)`;
+        }
+    </script>
+
+</body>
+</html>
