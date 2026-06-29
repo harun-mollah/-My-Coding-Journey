@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Car Dodger Game - Pro Version</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #222;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+        .game-area {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            background: #333;
+            border-left: 10px dashed #fff;
+            border-right: 10px dashed #fff;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+        }
+        .line {
+            position: absolute;
+            width: 8px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.6);
+            left: 146px;
+        }
+        
+        /* Player Car */
+        .myCar {
+            position: absolute;
+            bottom: 20px;
+            left: 130px;
+            width: 40px;
+            height: 75px;
+            background: #ff1f43;
+            border-radius: 10px 10px 15px 15px;
+            box-shadow: 0 5px 15px rgba(255, 31, 67, 0.4);
+        }
+        
+        /* Shield Glow */
+        .shield-active {
+            box-shadow: 0 0 25px #2ed573, 0 0 10px #2ed573 !important;
+            border: 2px solid #2ed573;
+        }
+
+        /* Warning Blink Animation (Lup-Lup) */
+        .shield-warning {
+            animation: warningBlink 0.3s infinite alternate;
+        }
+        @keyframes warningBlink {
+            0% { box-shadow: 0 0 25px #2ed573; border: 2px solid #2ed573; }
+            100% { box-shadow: 0 0 5px #ff1f43; border: 2px solid #ff1f43; }
+        }
+
+        .myCar::before {
+            content: '';
+            position: absolute;
+            top: 15px; left: 5px; width: 30px; height: 18px;
+            background: #222; border-radius: 4px 4px 0 0;
+            border-bottom: 3px solid #ff1f43;
+        }
+        .myCar::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 40px; height: 6px;
+            background: #111; border-radius: 0 0 5px 5px;
+        }
+
+        /* Enemy Car */
+        .enemyCar {
+            position: absolute;
+            width: 40px;
+            height: 75px;
+            background: #ffd32d;
+            border-radius: 10px 10px 12px 12px;
+            box-shadow: 0 5px 15px rgba(255, 211, 45, 0.3);
+        }
+        .enemyCar::before {
+            content: '';
+            position: absolute;
+            top: 15px; left: 5px; width: 30px; height: 18px;
+            background: #333; border-radius: 4px 4px 0 0;
+        }
+        
+        /* Power-Up Item */
+        .powerUp {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #2ed573;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px #2ed573;
+        }
+
+        .wheels {
+            position: absolute; width: 6px; height: 14px;
+            background: #111; border-radius: 2px;
+        }
+        .w-top-left { top: 12px; left: -5px; }
+        .w-top-right { top: 12px; right: -5px; }
+        .w-bottom-left { bottom: 12px; left: -5px; }
+        .w-bottom-right { bottom: 12px; right: -5px; }
+
+        /* UI */
+        .score-board {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-left: 5px solid #ff1f43;
+            z-index: 5;
+        }
+        .power-status {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+            font-weight: bold;
+        }
+        .start-screen {
+            position: absolute;
+            width: 300px;
+            height: 500px;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+        .start-btn {
+            padding: 12px 30px;
+            background: linear-gradient(to right, #ff1f43, #ff4757);
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 31, 67, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="score-board">
+        🏎️ Score: <span id="score">0</span>
+        <div class="power-status" id="powerStatus">🛡️ SHIELD: 5s</div>
+    </div>
+
+    <div class="game-area">
+        <div class="start-screen" id="startScreen">
+            <h2 style="color: #ff1f43; font-size: 1.8rem; margin-bottom: 5px;">🏎️ PRO RACER</h2>
+            <p style="color: #ccc; font-size: 0.9rem; padding: 0 20px;">🟢 Spawns every 15-25s.<br>Watch for the blinking warning alert!</p>
+            <button class="start-btn" onclick="startGame()">Start Race</button>
+        </div>
+
+        <div class="line" style="top: 0px;" id="line1"></div>
+        <div class="line" style="top: 150px;" id="line2"></div>
+        <div class="line" style="top: 300px;" id="line3"></div>
+        <div class="line" style="top: 450px;" id="line4"></div>
+
+        <div class="myCar" id="playerCar">
+            <div class="wheels w-top-left"></div><div class="wheels w-top-right"></div>
+            <div class="wheels w-bottom-left"></div><div class="wheels w-bottom-right"></div>
+        </div>
+        <div class="enemyCar" id="enemyCar" style="top: -100px; left: 50px;">
+            <div class="wheels w-top-left"></div><div class="wheels w-top-right"></div>
+            <div class="wheels w-bottom-left"></div><div class="wheels w-bottom-right"></div>
+        </div>
+
+        <div class="powerUp" id="powerItem" style="top: -200px; left: 100px;">⭐</div>
+    </div>
+
+    <script>
+        const playerCar = document.getElementById('playerCar');
+        const enemyCar = document.getElementById('enemyCar');
+        const powerItem = document.getElementById('powerItem');
+        const startScreen = document.getElementById('startScreen');
+        const scoreDisplay = document.getElementById('score');
+        const powerStatus = document.getElementById('powerStatus');
+
+        let carPos = { x: 130, y: 405 };
+        let enemyPos = { x: 50, y: -100 };
+        let powerPos = { x: 100, y: -200 };
+        
+        let gameActive = false;
+        let hasShield = false;
+        let score = 0;
+        let speed = 5;
+        let shieldTimer = null;
+        let warningTimer = null;
+
+        let keys = { ArrowLeft: false, ArrowRight: false };
+
+        document.addEventListener('keydown', (e) => { if(e.key in keys) keys[e.key] = true; });
+        document.addEventListener('keyup', (e) => { if(e.key in keys) keys[e.key] = false; });
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameActive = true;
+            hasShield = false;
+            clearTimeout(shieldTimer);
+            clearTimeout(warningTimer);
+            playerCar.className = "myCar";
+            powerStatus.style.display = 'none';
+            score = 0; speed = 5;
+            enemyPos.y = -100;
+            enemyPos.x = Math.floor(Math.random() * 220) + 20;
+            
+            // Powerup initial drop time: 15 to 25 seconds random delay
+            resetPowerUpTimer();
+
+            carPos.x = 130;
+            window.requestAnimationFrame(gameLoop);
+        }
+
+        function resetPowerUpTimer() {
+            powerPos.y = -1000; // Keep offscreen initially
+            const randomDelay = Math.floor(Math.random() * 10000) + 15000; // 15s to 25s
+            setTimeout(() => {
+                if (gameActive && !hasShield) {
+                    powerPos.y = -50;
+                    powerPos.x = Math.floor(Math.random() * 220) + 20;
+                }
+            }, randomDelay);
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            if (keys.ArrowLeft && carPos.x > 20) carPos.x -= 6;
+            if (keys.ArrowRight && carPos.x < 240) carPos.x += 6;
+            playerCar.style.left = carPos.x + 'px';
+
+            for (let i = 1; i <= 4; i++) {
+                let line = document.getElementById('line' + i);
+                let top = parseInt(line.style.top);
+                if (top >= 500) top = -60;
+                line.style.top = (top + speed) + 'px';
+            }
+
+            // Move Enemy
+            enemyPos.y += speed;
+            if (enemyPos.y > 500) {
+                enemyPos.y = -100;
+                enemyPos.x = Math.floor(Math.random() * 220) + 20;
+                score += hasShield ? 20 : 10;
+                scoreDisplay.innerText = score;
+                if(score % 50 === 0) speed += 1; 
+            }
+            enemyCar.style.top = enemyPos.y + 'px';
+            enemyCar.style.left = enemyPos.x + 'px';
+
+            // Move Power-Up
+            if (powerPos.y > -200) {
+                powerPos.y += speed;
+                if (powerPos.y > 500) {
+                    resetPowerUpTimer(); // Reset for next drop after 15-25s
+                }
+                powerItem.style.top = powerPos.y + 'px';
+                powerItem.style.left = powerPos.x + 'px';
+            } else {
+                powerItem.style.top = '-200px'; // Hide far away
+            }
+
+            // Power-up Collision
+            if (
+                powerPos.y > -100 &&
+                carPos.x < powerPos.x + 30 &&
+                carPos.x + 36 > powerPos.x &&
+                carPos.y < powerPos.y + 30 &&
+                carPos.y + 75 > powerPos.y
+            ) {
+                activateShield();
+                powerPos.y = -1000;
+            }
+
+            // Enemy Collision
+            if (
+                carPos.x < enemyPos.x + 36 &&
+                carPos.x + 36 > enemyPos.x &&
+                carPos.y < enemyPos.y + 75 &&
+                carPos.y + 75 > enemyPos.y
+            ) {
+                if (hasShield) {
+                    enemyPos.y = -100;
+                    enemyPos.x = Math.floor(Math.random() * 220) + 20;
+                    score += 30;
+                    scoreDisplay.innerText = score;
+                } else {
+                    endGame();
+                    return;
+                }
+            }
+
+            window.requestAnimationFrame(gameLoop);
+        }
+
+        function activateShield() {
+            hasShield = true;
+            playerCar.className = "myCar shield-active";
+            powerStatus.style.display = 'block';
+            powerStatus.style.color = '#2ed573';
+            powerStatus.innerText = "🛡️ SHIELD: ACTIVE";
+
+            // Warning mechanism: Starts blinking after 3 seconds (3000ms)
+            warningTimer = setTimeout(() => {
+                if (gameActive && hasShield) {
+                    playerCar.className = "myCar shield-warning";
+                    powerStatus.style.color = '#ff4757';
+                    powerStatus.innerText = "⚠️ SHIELD BREAKING!";
+                }
+            }, 3000);
+
+            // Complete Shield End: After total 6 seconds (6000ms)
+            shieldTimer = setTimeout(() => {
+                hasShield = false;
+                playerCar.className = "myCar";
+                powerStatus.style.display = 'none';
+                resetPowerUpTimer(); // Queue the next powerup
+            }, 6000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearTimeout(shieldTimer);
+            clearTimeout(warningTimer);
+            startScreen.innerHTML = `<h2 style="color: #ff1f43; font-size: 2rem;">💥 CRASHED!</h2><p style="color:#fff; font-size:1.2rem; margin: 10px 0;">Final Score: <b>${score}</b></p><button class="start-btn" onclick="startGame()">Restart Race</button>`;
+            startScreen.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
