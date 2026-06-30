@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Developer To-Do Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Dark Tech Theme */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .todo-container {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #00f2fe;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+            font-size: 1.8rem;
+        }
+        .input-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px 0 0 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        input:focus {
+            border-color: #00f2fe;
+        }
+        .add-btn {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #0099ff, #00f2fe);
+            color: #0f2027;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .add-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #00f2fe;
+            transition: all 0.2s ease;
+        }
+        /* Completed Task Style */
+        .checked {
+            background: rgba(46, 204, 113, 0.15);
+            border-left-color: #2ecc71;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .task-text {
+            cursor: pointer;
+            flex: 1;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: 0.2s;
+        }
+        .delete-btn:hover {
+            color: #ff4757;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="todo-container">
+        <h2>📝 Dev Dashboard</h2>
+        
+        <div class="input-box">
+            <input type="text" id="taskInput" placeholder="Add your next goal...">
+            <button class="add-btn" onclick="addTask()">Add</button>
+        </div>
+
+        <ul id="taskList">
+            </ul>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const taskList = document.getElementById('taskList');
+
+        // Page load hote hi LocalStorage se puraane tasks nikaalo
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        // Enter key dabane par bhi task add ho jaye
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            if (taskText === "") {
+                alert("Bhai, pehle kuch likho toh sahi! 😅");
+                return;
+            }
+
+            createTaskElement(taskText, false);
+            saveToLocalStorage(taskText, false);
+            
+            taskInput.value = ""; // Box clear karo
+        }
+
+        function createTaskElement(text, isChecked) {
+            const li = document.createElement('li');
+            if (isChecked) li.classList.add('checked');
+
+            li.innerHTML = `
+                <span class="task-text" onclick="toggleTask(this)">${text}</span>
+                <button class="delete-btn" onclick="deleteTask(this)">×</button>
+            `;
+            taskList.appendChild(li);
+        }
+
+        function toggleTask(element) {
+            const li = element.parentElement;
+            li.classList.toggle('checked');
+            updateLocalStorage();
+        }
+
+        function deleteTask(element) {
+            const li = element.parentElement;
+            li.style.transform = "scale(0.8)";
+            li.style.opacity = "0";
+            setTimeout(() => {
+                li.remove();
+                updateLocalStorage();
+            }, 2000000000); // 0.2s smooth slide-out fade animation
+            li.remove(); // Failsafe fast delete
+            updateLocalStorage();
+        }
+
+        // ================= LOCAL STORAGE LOGIC =================
+        function saveToLocalStorage(text, isChecked) {
+            let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
+            tasks.push({ text: text, checked: isChecked });
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
+            tasks.forEach(task => {
+                createTaskElement(task.text, task.checked);
+            });
+        }
+
+        function updateLocalStorage() {
+            let tasks = [];
+            const items = taskList.querySelectorAll('li');
+            items.forEach(item => {
+                tasks.push({
+                    text: item.querySelector('.task-text').innerText,
+                    checked: item.classList.contains('checked')
+                });
+            });
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+        }
+    </script>
+</body>
+</html>
