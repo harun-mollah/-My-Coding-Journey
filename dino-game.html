@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Dino Jump Game - Pro Edition</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #eef2f3;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .game-container {
+            position: relative;
+            width: 600px;
+            height: 200px;
+            background: #fff;
+            border-bottom: 4px solid #333; /* Solid Ground */
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        /* ================= STYLISH DINO DESIGN ================= */
+        .dino {
+            position: absolute;
+            bottom: 0px;
+            left: 50px;
+            width: 34px;
+            height: 44px;
+            background: #2c3e50; /* Dark Charcoal Body */
+            border-radius: 8px 12px 4px 4px;
+            box-shadow: inset -3px -3px 0px rgba(0,0,0,0.2);
+        }
+        /* Glowing Cyber Eye */
+        .dino::before {
+            content: '';
+            position: absolute;
+            top: 8px; right: 5px;
+            width: 6px; height: 4px;
+            background: #00ff87; /* Neon Green Visor Eye */
+            box-shadow: 0 0 8px #00ff87;
+            border-radius: 2px;
+        }
+        /* Dino Spines (Pith ke kaante) */
+        .dino::after {
+            content: '';
+            position: absolute;
+            top: 12px; left: -5px;
+            width: 5px; height: 18px;
+            background: #e74c3c; /* Red Spines */
+            border-radius: 3px 0 0 3px;
+            box-shadow: 0 5px 0 #e74c3c;
+        }
+
+        /* Running Animation (Tilt Effect) */
+        .dino-running {
+            animation: runMotion 0.15s infinite alternate;
+        }
+        @keyframes runMotion {
+            0% { transform: skewX(-2deg) translateY(0); }
+            100% { transform: skewX(2deg) translateY(-1px); }
+        }
+
+        /* Cactus Obstacle */
+        .cactus {
+            position: absolute;
+            bottom: 0px;
+            left: 620px;
+            width: 22px;
+            height: 46px;
+            background: #27ae60; /* Natural Green Cactus */
+            border-radius: 5px 5px 0 0;
+            box-shadow: inset -2px 0 0 rgba(0,0,0,0.1);
+        }
+        .cactus::before {
+            content: '';
+            position: absolute;
+            top: 12px; left: -6px;
+            width: 6px; height: 12px;
+            background: #27ae60;
+            border-radius: 3px 0 0 0;
+        }
+
+        /* Score Board */
+        .score-board {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            letter-spacing: 2px;
+        }
+        /* Start Overlay */
+        .start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            color: white;
+        }
+        .start-btn {
+            padding: 12px 28px;
+            background: #00ff87;
+            color: #2c3e50;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.4);
+            transition: 0.2s;
+        }
+        .start-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="score-board">SCORE <span id="score">00000</span></div>
+        
+        <!-- Start/Game Over Overlay -->
+        <div class="start-screen" id="startScreen">
+            <h2 id="gameTitle" style="font-size: 2rem; letter-spacing: 3px; margin: 0;">🦖 CYBER T-REX</h2>
+            <p style="color: #bdc3c7; margin-top: 5px;">Press <b>Spacebar</b> to Jump</p>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
+        </div>
+
+        <!-- Characters -->
+        <div class="dino" id="dino"></div>
+        <div class="cactus" id="cactus"></div>
+    </div>
+
+    <script>
+        const dino = document.getElementById('dino');
+        const cactus = document.getElementById('cactus');
+        const startScreen = document.getElementById('startScreen');
+        const scoreDisplay = document.getElementById('score');
+        const gameTitle = document.getElementById('gameTitle');
+
+        let isJumping = false;
+        let gameActive = false;
+        let score = 0;
+        let speed = 6;
+        let dinoY = 0; 
+        let gravity = 0.6;
+        let velocity = 0;
+        let cactusX = 620;
+
+        // Sound Engine Function (Generates an Arcade Beep)
+        function playMilestoneSound() {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.type = 'square'; // Arcade retro feel type
+            oscillator.frequency.value = 587.33; // D5 Note sound
+            
+            gainNode.gain.setValueAtTime(0.1, context.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.15); // Fade out quickly
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.15);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === "Space" && !isJumping && gameActive) {
+                jump();
+            }
+        });
+
+        function jump() {
+            isJumping = true;
+            velocity = 10.5; 
+            dino.classList.remove('dino-running'); // Stop running tilt while jumping
+        }
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameActive = true;
+            isJumping = false;
+            score = 0;
+            speed = 6;
+            dinoY = 0;
+            velocity = 0;
+            cactusX = 620;
+            dino.style.bottom = '0px';
+            dino.classList.add('dino-running');
+            scoreDisplay.innerText = "00000";
+            window.requestAnimationFrame(gameLoop);
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            // 1. Physics
+            if (isJumping) {
+                dinoY += velocity;
+                velocity -= gravity;
+
+                if (dinoY <= 0) {
+                    dinoY = 0;
+                    isJumping = false;
+                    velocity = 0;
+                    dino.classList.add('dino-running'); // Resume running animation on ground
+                }
+                dino.style.bottom = dinoY + 'px';
+            }
+
+            // 2. Move Cactus
+            cactusX -= speed;
+            if (cactusX < -20) {
+                cactusX = 620; 
+                score += 10;
+                scoreDisplay.innerText = String(score).padStart(5, '0');
+                
+                // Sound logic: Play when score hits 100, 200, 300, etc.
+                if (score > 0 && score % 100 === 0) {
+                    playMilestoneSound();
+                }
+
+                if (score % 50 === 0) speed += 0.5; 
+            }
+            cactus.style.left = cactusX + 'px';
+
+            // 3. Collision
+            if (
+                cactusX > 50 && cactusX < 84 && 
+                dinoY < 46
+            ) {
+                endGame();
+                return;
+            }
+
+            window.requestAnimationFrame(gameLoop);
+        }
+
+        function endGame() {
+            gameActive = false;
+            dino.classList.remove('dino-running');
+            gameTitle.innerText = "💀 SYSTEM CRASHED";
+            startScreen.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
